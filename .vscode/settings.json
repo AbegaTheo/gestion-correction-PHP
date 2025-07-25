@@ -1,0 +1,13 @@
+{
+    "editor.minimap.enabled": false,
+    "editor.formatOnSave": false,
+    "editor.renderWhitespace": "all",
+    "files.autoSave": "onFocusChange",
+    "files.defaultLanguage": "markdown",
+    "workbench.iconTheme": "material-icon-theme",
+    "workbench.colorTheme": "Default Dark Modern",
+    "material-icon-theme.hidesExplorerArrows": true,
+    "material-icon-theme.folders.theme": "specific",
+    "material-icon-theme.folders.color": "#f0f0f0",
+    "CodeGPT.apiKey": "CodeGPT Plus Beta"
+}
