@@ -34,6 +34,7 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 
 $header = new Header();
 $header->render();
+$footer = new Footer();
 ?>
 
     <title>Supprimer un etablissement - Gestion de correction</title>
@@ -127,9 +128,7 @@ $header->render();
     </div>
 </div>
 
-<?php
-$footer = new Footer();
-$footer->render(); ?>
+<?php $footer->render(); ?>
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

@@ -2,14 +2,14 @@
 // Inclure l'autoloader
 require_once __DIR__ . '/../../../autoload.php';
 
-use App\Controllers\ProfesseurController;
+use App\Controllers\EpreuveController;
 use App\Views\Layout\Header;
 use App\Views\Layout\Footer;
 
 // Vérifier si un ID est fourni
 if (!isset($_GET['id']) || empty($_GET['id'])) {
     // Aucun ID fourni, afficher un message d'erreur
-    $error = "Aucun professeur spécifié pour la suppression.";
+    $error = "Aucune épreuve spécifié pour la suppression.";
     $showConfirmation = false;
 } else {
     $id = (int)$_GET['id'];
@@ -17,8 +17,8 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
 
     // Si la confirmation est donnée, procéder à la suppression
     if (isset($_POST['confirm']) && $_POST['confirm'] === 'yes') {
-        $professeurController = new ProfesseurController();
-        $success = $professeurController->delete($id);
+        $epreuveController = new EpreuveController();
+        $success = $epreuveController->delete($id);
 
         if ($success) {
             // Redirection avec message de succès
@@ -26,7 +26,7 @@ if (!isset($_GET['id']) || empty($_GET['id'])) {
             exit;
         } else {
             // Échec de la suppression
-            $error = "Erreur lors de la suppression du professeur. Veuillez réessayer.";
+            $error = "Erreur lors de la suppression de l'épreuve. Veuillez réessayer.";
             $showConfirmation = false;
         }
     }
@@ -37,7 +37,7 @@ $header->render();
 $footer = new Footer();
 ?>
 
-    <title>Supprimer un professeur - Gestion de correction</title>
+    <title>Supprimer une épreuve - Gestion de correction</title>
     <!-- Bootstrap CSS -->
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
     <!-- Font Awesome pour les icônes -->
@@ -94,7 +94,7 @@ $footer = new Footer();
         <div class="col-md-12">
             <div class="card">
                 <div class="card-header bg-danger text-white">
-                    <h4><i class="fas fa-trash-alt me-2"></i> Suppression d'un professeur</h4>
+                    <h4><i class="fas fa-trash-alt me-2"></i> Suppression d'une épreuve</h4>
                 </div>
                 <div class="card-body">
                     <?php if (isset($error)): ?>
@@ -108,8 +108,8 @@ $footer = new Footer();
                         <div class="alert alert-warning">
                             <i class="fas fa-exclamation-triangle me-2"></i> Attention : Cette action est irréversible !
                         </div>
-                        <p class="lead">Êtes-vous sûr de vouloir supprimer ce professeur ?</p>
-                        <p>Une fois supprimé, toutes les données associées à ce professeur seront définitivement perdues.</p>
+                        <p class="lead">Êtes-vous sûr de vouloir supprimer cette épreuve ?</p>
+                        <p>Une fois supprimé, toutes les données associées à cette épreuve seront définitivement perdues.</p>
 
                         <form action="supprimer.php?id=<?= $id ?>" method="post" class="mt-4">
                             <div class="d-flex gap-3">

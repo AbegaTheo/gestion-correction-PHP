@@ -9,9 +9,9 @@ class Etablissement extends BaseModel {
     private string $ville;
 
     public function __construct(string $nom = '', string $ville = '', ?int $id = null) {
-        $this->id = $id;
         $this->nom = $nom;
         $this->ville = $ville;
+        $this->id = $id;
     }
 
     public function getId(): ?int { return $this->id; }

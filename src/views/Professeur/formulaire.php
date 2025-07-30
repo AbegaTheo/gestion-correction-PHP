@@ -1,6 +1,61 @@
 <?php
 // Inclure l'autoloader
 require_once __DIR__ . '/../../../autoload.php';
+
+use App\Controllers\ProfesseurController;
+use App\Models\Professeur;
+use App\Views\Layout\Header;
+use App\Views\Layout\Footer;
+
+$header = new Header();
+$header->render();
+$footer = new Footer();
+
+// Initialisation du professeur (nouveau ou existant)
+$isEditMode = isset($_GET['id']);
+$professeur = new Professeur();
+$professeurController = new ProfesseurController();
+
+if ($isEditMode) {
+    // Mode édition
+    $id = (int)$_GET['id'];
+    // Récupérer le professeur existant (à implémenter)
+    $professeur = $professeurController->find($id);
+
+    if (!$professeur) {
+        header('Location: index.php?error=not_found');
+        exit;
+    }
+
+    if (isset($_POST['submit'])) {
+        // Traitement du formulaire de modification
+        $professeur->setNom($_POST['nom']);
+        $professeur->setPrenom($_POST['prenom']);
+        $professeur->setGrade($_POST['grade']);
+        $professeur->setIdEtab($_POST['id_etab']);
+
+        $professeur = $professeurController->edit($id, $professeur);
+        // Redirection après modification
+        header('Location: index.php?success=edit');
+        exit;
+    }
+} else {
+    // Mode création
+    if (isset($_POST['submit'])) {
+        // Traitement du formulaire d'ajout
+        $professeur = new Professeur(
+            $_POST['nom'],
+            $_POST['prenom'],
+            $_POST['grade'],
+            $_POST['id_etab']
+        );
+
+        $professeur = $professeurController->new($professeur);
+        // Redirection après ajout
+        header('Location: index.php?success=add');
+        exit;
+    }
+}
 ?>
 <!-- Formulaire pour créer et modifier un professeur -->
 <!DOCTYPE html>
@@ -63,64 +118,6 @@ require_once __DIR__ . '/../../../autoload.php';
 </head>
 
 <body>
-
-    <?php
-
-    use App\Views\Layout\Header;
-    use App\Views\Layout\Footer;
-
-    $header = new Header();
-    $header->render();
-    ?>
-
-    <?php
-
-    use App\Controllers\ProfesseurController;
-    use App\Models\Professeur;
-
-    // Initialisation du professeur (nouveau ou existant)
-    $isEditMode = isset($_GET['id']);
-    $professeur = new Professeur();
-
-    if ($isEditMode) {
-        // Mode édition
-        $id = (int)$_GET['id'];
-        $professeurController = new ProfesseurController();
-        // Récupérer le professeur existant (à implémenter)
-        // $professeur = $professeurController->getById($id);
-
-        if (isset($_POST['submit'])) {
-            // Traitement du formulaire de modification
-            $professeur->setNom($_POST['nom']);
-            $professeur->setPrenom($_POST['prenom']);
-            $professeur->setGrade($_POST['grade']);
-            $professeur->setIdEtab($_POST['id_etab']);
-
-            $professeur = $professeurController->edit($id, $professeur);
-            // Redirection après modification
-            // header('Location: index.php?success=edit');
-            // exit;
-        }
-    } else {
-        // Mode création
-        if (isset($_POST['submit'])) {
-            // Traitement du formulaire d'ajout
-            $professeur = new Professeur(
-                $_POST['nom'],
-                $_POST['prenom'],
-                $_POST['grade'],
-                $_POST['id_etab']
-            );
-
-            $professeurController = new ProfesseurController();
-            $professeur = $professeurController->new($professeur);
-            // Redirection après ajout
-            // header('Location: index.php?success=add');
-            // exit;
-        }
-    }
-    ?>
-
     <!-- En-tête descriptif -->
     <div class="header-section">
         <div class="container">
@@ -266,8 +263,7 @@ require_once __DIR__ . '/../../../autoload.php';
         </div>
     </div>
 
-    <?php $footer = new Footer();
-    $footer->render(); ?>
+    <?php $footer->render(); ?>
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>

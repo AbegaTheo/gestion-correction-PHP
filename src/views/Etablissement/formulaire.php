@@ -1,6 +1,57 @@
 <?php
 // Inclure l'autoloader
 require_once __DIR__ . '/../../../autoload.php';
+
+use App\Controllers\EtablissementController;
+use App\Models\Etablissement;
+use App\Views\Layout\Header;
+use App\Views\Layout\Footer;
+
+$header = new Header();
+$header->render();
+$footer = new Footer();
+
+// Initialisation du Etablissement (nouveau ou existant)
+$isEditMode = isset($_GET['id']);
+$etab = new Etablissement();
+$etablissementController = new EtablissementController();
+
+if ($isEditMode) {
+    // Mode édition
+    $id = (int)$_GET['id'];
+    // Récupérer l'établissement existant (à implémenter)
+    $etab = $etablissementController->find($id);
+
+    if (!$etab) {
+        header('Location: index.php?error=not_found');
+        exit;
+    }
+
+    if (isset($_POST['submit'])) {
+        // Traitement du formulaire de modification
+        $etab->setNom($_POST['nom']);
+        $etab->setVille($_POST['ville']);
+
+        $etab = $etablissementController->edit($id, $etab);
+        // Redirection après modification
+        header('Location: index.php?success=edit');
+        exit;
+    }
+} else {
+    // Mode création
+    if (isset($_POST['submit'])) {
+        // Traitement du formulaire d'ajout
+        $etab = new Etablissement(
+            $_POST['nom'],
+            $_POST['ville']
+        );
+
+        $etablissementController->new($etab);
+        // Redirection après ajout
+        header('Location: index.php?success=add');
+        exit;
+    }
+}
 ?>
 <!-- Formulaire pour créer et modifier un professeur -->
 <!DOCTYPE html>
@@ -63,56 +114,6 @@ require_once __DIR__ . '/../../../autoload.php';
 </head>
 
 <body>
-
-    <?php
-    use App\Views\Layout\Header;
-    use App\Views\Layout\Footer;
-
-    $header = new Header();
-    $header->render();
-
-    use App\Controllers\EtablissementController;
-    use App\Models\Etablissement;
-
-    // Initialisation du Etablissement (nouveau ou existant)
-    $isEditMode = isset($_GET['id']);
-    $etab = new Etablissement();
-
-    if ($isEditMode) {
-        // Mode édition
-        $id = (int)$_GET['id'];
-        $etablissementController = new EtablissementController();
-        // Récupérer l'établissement existant (à implémenter)
-        // $etab = $etablissementController->getById($id);
-
-        if (isset($_POST['submit'])) {
-            // Traitement du formulaire de modification
-            $etab->setNom($_POST['nom']);
-            $etab->setVille($_POST['ville']);
-
-            $etab = $etablissementController->edit($id, $etab);
-            // Redirection après modification
-            // header('Location: index.php?success=edit');
-            // exit;
-        }
-    } else {
-        // Mode création
-        if (isset($_POST['submit'])) {
-            // Traitement du formulaire d'ajout
-            $etab = new Etablissement(
-                $_POST['nom'],
-                $_POST['ville'],
-            );
-
-            $etablissementController = new EtablissementController();
-            $etab = $etablissementController->new($etab);
-            // Redirection après ajout
-            // header('Location: index.php?success=add');
-            // exit;
-        }
-    }
-    ?>
-
     <!-- En-tête descriptif -->
     <div class="header-section">
         <div class="container">
@@ -227,8 +228,7 @@ require_once __DIR__ . '/../../../autoload.php';
         </div>
     </div>
 
-    <?php $footer = new Footer();
-    $footer->render(); ?>
+    <?php $footer->render(); ?>
 
     <!-- Bootstrap JS Bundle with Popper -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
